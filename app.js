@@ -38,19 +38,24 @@ var app = new Vue({
     },
 
     computed: {
-        status: function () {
-            var count = 0;
-            var countDone = 0;
-            for (var i in this.bills) {
-                count++;
-                if (!this.bills[i].done) {
-                    countDone++;
+        status: {
+            cache: false,
+            get: function () {
+                console.log(this.bills);
+                var count = 0, countDone = 0;
+                for (var i in this.bills) {
+                    if (this.bills[i].done == 0) {
+                        countDone++;
+                    }
+                    count++;
                 }
+                if (!count) {
+                    return { tag: -1, value: "Nenhuma conta cadastrada" };
+                }
+                return countDone == 0 ?
+                    { tag: 0, value: "Nenhuma conta a pagar" } :
+                    { tag: 1, value: "Existe(m) " + countDone + " conta(s) a ser(em) paga(s)" };
             }
-            if (!count) {
-                return {tag: -1, value: "Nenhuma conta cadastrada"};
-            }
-            return countDone == 0 ? {tag: 0, value: "Nenhuma conta a pagar"} : {tag: 1, value: "Existe(m) " + countDone + " conta(s) a ser(em) paga(s)"};
         }
     },
 
@@ -68,8 +73,6 @@ var app = new Vue({
             }
         },
         submit: function () {
-            console.log(this.bill);
-
             if (this.formType == 'insert') {
                 this.bills.push(this.bill);
             }
@@ -87,19 +90,6 @@ var app = new Vue({
             this.bill = bill;
             this.activedView = 1;
             this.formType = 'update';
-/*
-            if (this.formType == 'insert') {
-                this.bills.push(this.bill);
-            }
-            // Limpar o formulário
-            this.bill = {
-                date_due: '',
-                name: '',
-                value: 0,
-                done: 0
-            };
-            this.activedView = 0;
-*/
         },
         destroyBill: function (index) {
             if (confirm("Deseja realmente excluir a conta?")) {
