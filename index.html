@@ -19,7 +19,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>
+            <h1 class="text-primary">
                 {{ title }}
                 <br>
                 <small :class="{'text-default': status.tag == -1, 'text-success': status.tag == 0, 'text-danger': status.tag == 1}">
@@ -38,9 +38,9 @@
             </nav>
             <hr>
             <div v-if="activedView == 0">
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
-                    <tr>
+                    <tr class="text-primary">
                         <th>#</th>
                         <th>Vencimento</th>
                         <th>Nome</th>
@@ -55,18 +55,19 @@
                         <td>{{ o.date_due }}</td>
                         <td>{{ o.name }}</td>
                         <td>{{ o.value | currency 'R$ ' 2 }}</td>
-                        <td class="bg-warning" :class="{'text-success': o.done, 'text-danger': !o.done}">
+                        <td style="font-weight: bold" :class="{'text-success': o.done==1, 'text-danger': o.done==0}">
                             {{ o.done | doneLabel }}
                         </td>
                         <td>
-                            <a href="#" @click.prevent="loadBill(o)">Editar</a>
+                            <a href="#" class="btn btn-primary btn-xs" @click.prevent="loadBill(o)">Editar</a>
+                            <a href="#" class="btn btn-danger btn-xs" @click.prevent="destroyBill(index)">Excluir</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <div v-if="activedView == 1">
-                <h3>Incluir Conta a Pagar</h3>
+                <h3>{{ formType == "insert" ? "Incluir Conta a Pagar" : "Editar Conta a Pagar" }}</h3>
                 <br>
                 <form name="form" @submit.prevent="submit">
                     <div class="form-group">
@@ -82,6 +83,17 @@
                     <div class="form-group">
                         <label>Valor:</label>
                         <input type="text" class="form-control" v-model="bill.value"/>
+                    </div>
+
+                    <div v-if="formType == 'update'">
+                        <legend>Conta Paga?</legend>
+                        <label class="radio-inline">
+                            <input type="radio" id="0" v-model="bill.done" value=0> Não
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" id="1" v-model="bill.done" value=1> Sim
+                        </label>
+                        <hr>
                     </div>
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Salvar"/>
