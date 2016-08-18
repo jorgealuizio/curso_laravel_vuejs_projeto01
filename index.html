@@ -15,8 +15,8 @@
                 <h1 class="text-primary">
                     {{ title }}
                     <br>
-                    <small :class="{'text-default': status.tag == -1, 'text-success': status.tag == 0, 'text-danger': status.tag == 1}">
-                        {{ status.value }}
+                    <small :class="{'text-default': status === false, 'text-success': status === 0, 'text-danger': status > 0}">
+                        {{ status | statusLabel }}
                     </small>
                 </h1>
                 <br>
@@ -53,7 +53,7 @@
                             </td>
                             <td>
                                 <a href="#" class="btn btn-primary btn-xs" @click.prevent="loadBill(o)">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs" @click.prevent="destroyBill(index)">Excluir</a>
+                                <a href="#" class="btn btn-danger btn-xs" @click.prevent="destroyBill(o)">Excluir</a>
                             </td>
                         </tr>
                         </tbody>

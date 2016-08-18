@@ -1,3 +1,22 @@
+// Filtro personalizado para a coluna CONTA PAGA
+Vue.filter('doneLabel', function (value) {
+    if (value == 1) {
+        return "Paga";
+    }
+    return "Não paga";
+});
+
+// Filtro para exibição das mensagens de Contas pagas/não pagas
+Vue.filter('statusLabel', function (value) {
+    if(value === false) {
+        return "Nenhuma conta cadastrada";
+    }
+    if (!value) {
+        return "Nenhuma conta a pagar";
+    }
+    return "Existe(m) " + value + " conta(s) a ser(em) paga(s)";
+});
+
 var app = new Vue({
 
     el: "#app",
@@ -38,24 +57,17 @@ var app = new Vue({
     },
 
     computed: {
-        status: {
-            cache: false,
-            get: function () {
-                console.log(this.bills);
-                var count = 0, countDone = 0;
-                for (var i in this.bills) {
-                    if (this.bills[i].done == 0) {
-                        countDone++;
-                    }
+        status: function (){
+            if(!this.bills.length) {
+                return false;
+            }
+            var count = 0;
+            for (var i in this.bills) {
+                if (this.bills[i].done == 0) {
                     count++;
                 }
-                if (!count) {
-                    return { tag: -1, value: "Nenhuma conta cadastrada" };
-                }
-                return countDone == 0 ?
-                    { tag: 0, value: "Nenhuma conta a pagar" } :
-                    { tag: 1, value: "Existe(m) " + countDone + " conta(s) a ser(em) paga(s)" };
             }
+            return count;
         }
     },
 
@@ -91,20 +103,10 @@ var app = new Vue({
             this.activedView = 1;
             this.formType = 'update';
         },
-        destroyBill: function (index) {
+        destroyBill: function (bill) {
             if (confirm("Deseja realmente excluir a conta?")) {
-                this.bills.splice(index,1);
-                this.activedView = 0;
+                this.bills.$remove(bill);
             }
         }
     }
-
-});
-
-// Filtro personalizado para a coluna CONTA PAGA
-Vue.filter('doneLabel', function (value) {
-    if (value == 1) {
-        return "Paga";
-    }
-    return "Não paga";
 });
