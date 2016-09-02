@@ -9,95 +9,19 @@
 </head>
 
 <body id="app">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-primary">
-                    {{ title }}
-                    <br>
-                    <small :class="{'text-default': status === false, 'text-success': status === 0, 'text-danger': status > 0}">
-                        {{ status | statusLabel }}
-                    </small>
-                </h1>
-                <br>
-                <nav class="navbar navbar-default">
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            <li v-for="m in menus">
-                                <a href="#" @click.prevent="showView(m.id)">{{ m.name }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-                <hr>
-                <div v-if="activedView == 0">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr class="text-primary">
-                            <th>#</th>
-                            <th>Vencimento</th>
-                            <th>Nome</th>
-                            <th>Valor</th>
-                            <th>Paga?</th>
-                            <th>Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(index, o) in bills">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ o.date_due }}</td>
-                            <td>{{ o.name }}</td>
-                            <td>{{ o.value | currency 'R$ ' 2 }}</td>
-                            <td style="font-weight: bold" :class="{'text-success': o.done==1, 'text-danger': o.done==0}">
-                                {{ o.done | doneLabel }}
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-primary btn-xs" @click.prevent="loadBill(o)">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs" @click.prevent="destroyBill(o)">Excluir</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div v-if="activedView == 1">
-                    <h3>{{ formType == "insert" ? "Incluir Conta a Pagar" : "Editar Conta a Pagar" }}</h3>
-                    <br>
-                    <form name="form" @submit.prevent="submit">
-                        <div class="form-group">
-                            <label>Vencimento:</label>
-                            <input type="date" class="form-control" v-model="bill.date_due"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Nome:</label>
-                            <select class="form-control" v-model="bill.name">
-                                <option v-for="obj in names" :value="obj">{{ obj }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Valor:</label>
-                            <input type="text" class="form-control" v-model="bill.value"/>
-                        </div>
-
-                        <div v-if="formType == 'update'">
-                            <legend>Conta Paga?</legend>
-                            <label class="radio-inline">
-                                <input type="radio" id="0" v-model="bill.done" value=0> Não
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" id="1" v-model="bill.done" value=1> Sim
-                            </label>
-                            <hr>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="Salvar"/>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <main-component></main-component>
 
     <script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
-    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="node_modules/vue-router/dist/vue-router.min.js"></script>
+    <script type="text/javascript" src="filters.js"></script>
+    <script type="text/javascript" src="bill.component.js"></script>
+
+    <script type="text/javascript" src="bill-pay/bill-pay-menu.component.js"></script>
+    <script type="text/javascript" src="bill-pay/bill-pay-list.component.js"></script>
+    <script type="text/javascript" src="bill-pay/bill-pay-create.component.js"></script>
+    <script type="text/javascript" src="bill-pay/bill-pay.component.js"></script>
+
+    <script type="text/javascript" src="bill-receive/bill-receive.component.js"></script>
+    <script type="text/javascript" src="main.js"></script>
 </body>
 </html>
