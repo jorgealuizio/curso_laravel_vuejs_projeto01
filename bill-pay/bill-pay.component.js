@@ -1,6 +1,6 @@
 window.billPayComponent = Vue.extend({
     components: {
-        'menu-component': billPayMenuComponent
+        'pay-menu-component': billPayMenuComponent
     },
     template: `
         <div class="container">
@@ -14,7 +14,7 @@ window.billPayComponent = Vue.extend({
                         </small>
                     </h1>
                     <br>
-                    <menu-component></menu-component>
+                    <pay-menu-component></pay-menu-component>
                     <hr>
                     <router-view></router-view>
                 </div>

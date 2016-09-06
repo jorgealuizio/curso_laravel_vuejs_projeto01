@@ -18,7 +18,7 @@ window.billReceiveListComponent = Vue.extend({
                 <td>{{ o.name }}</td>
                 <td>{{ o.value | currency 'R$ ' 2 }}</td>
                 <td style="font-weight: bold" :class="{'text-success': o.done==1, 'text-danger': o.done==0}">
-                    {{ o.done | doneLabel }}
+                    {{ o.done | doneLabelRecebidas }}
                 </td>
                 <td>
                     <a v-link="{ name: 'bill-receive.update', params: { index: index } }" class="btn btn-primary btn-xs">Editar</a>

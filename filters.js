@@ -1,9 +1,17 @@
 // Filtro personalizado para a coluna CONTA PAGA
-Vue.filter('doneLabel', function (value) {
+Vue.filter('doneLabelPagas', function (value) {
     if (value == 1) {
         return "Paga";
     }
     return "Não paga";
+});
+
+// Filtro personalizado para a coluna CONTA RECEBIDA
+Vue.filter('doneLabelRecebidas', function (value) {
+    if (value == 1) {
+        return "Recebida";
+    }
+    return "Não recebida";
 });
 
 // Filtro para exibição das mensagens de Contas pagas/não pagas
