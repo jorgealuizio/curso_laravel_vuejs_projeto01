@@ -17,19 +17,23 @@ var mainComponent = Vue.extend({
                 {date_due: '26/08/2016', name: 'Gasolina', value: 200, done: 0}
             ],
             billsReceive: [
-                {date_due: '20/08/2016', name: 'Suporte Técnico', value: 70.99, done: 1},
-                {date_due: '21/08/2016', name: 'Treinamento', value: 50.99, done: 1},
-                {date_due: '22/08/2016', name: 'Treinamento', value: 55.99, done: 0},
-                {date_due: '23/08/2016', name: 'Consultoria', value: 625.99, done: 0},
-                {date_due: '24/08/2016', name: 'Sistema', value: 1500.99, done: 1},
-                {date_due: '25/08/2016', name: 'Site', value: 2000.99, done: 0},
-                {date_due: '26/08/2016', name: 'Consultoria', value: 200, done: 0}
+                {date_due: '20/08/2016', name: 'Suporte Técnico', value: 390.00, done: 1},
+                {date_due: '21/08/2016', name: 'Treinamento', value: 4800.00, done: 1},
+                {date_due: '22/08/2016', name: 'Treinamento', value: 3459.00, done: 0},
+                {date_due: '23/08/2016', name: 'Consultoria', value: 625.00, done: 0},
+                {date_due: '24/08/2016', name: 'Sistema', value: 1500.00, done: 1},
+                {date_due: '25/08/2016', name: 'Site', value: 2000.00, done: 0},
+                {date_due: '26/08/2016', name: 'Consultoria', value: 200.00, done: 0}
             ]
         };
     }
 });
 
 router.map({
+    '/': {
+        name: 'dashboard',
+        component: dashboardComponent,
+    },
     '/bill-pays': {
         component: billPayComponent,
         subRoutes: {
@@ -65,7 +69,7 @@ router.map({
         }
     },
     '*': {
-        component: billPayListComponent
+        component: dashboardComponent
     }
 });
 
@@ -76,5 +80,5 @@ router.start({
 }, '#app');
 
 router.redirect({
-    '*': '/bill-pays/'
+    '*': '/'
 });
