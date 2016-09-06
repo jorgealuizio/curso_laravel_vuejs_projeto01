@@ -1,9 +1,16 @@
 window.dashboardComponent = Vue.extend({
     template: `
-        <div class="jumbotron">
-            <h1>Saldo de Contas</h1>
-            <p>...</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 align="center">Gestão de Contas</h1>
+                <hr>
+                <br>
+                <h2 class="text-primary" align="center">Saldo total atual entre Contas à Receber e Contas à Pagar:</h2>
+                <br>
+                <h2 align="center" :class="{'text-success': saldo >= 0, 'text-danger': saldo < 0}">
+                    {{ saldo | currency 'R$ ' 2 }}
+                </h2>
+            </div>
         </div>
     `,
     computed: {
@@ -11,17 +18,18 @@ window.dashboardComponent = Vue.extend({
             var billsReceive = this.$root.$children[0].billsReceive,
                 billsPay = this.$root.$children[0].billsPay;
 
-            // if(!billsReceive.length && !billsPay.length) {
-            //     return false;
-            // }
-
             var toalReceive = 0,
                 totalPay = 0;
+
             for (var i in billsReceive) {
-                toalReceive += billsReceive[i].value;
+                if (billsReceive[i].done == 0) {
+                    toalReceive += billsReceive[i].value;
+                }
             }
             for (var j in billsPay) {
-                totalPay += billsPay[j].value;
+                if (billsPay[j].done == 0) {
+                    totalPay += billsPay[j].value;
+                }
             }
             return (toalReceive - totalPay);
         }
