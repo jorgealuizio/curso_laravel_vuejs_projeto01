@@ -10,7 +10,7 @@ window.billPayComponent = Vue.extend({
                         {{ title }}
                         <br>
                         <small :class="{'text-default': status === false, 'text-success': status === 0, 'text-danger': status > 0}">
-                            {{ status | statusLabel }}
+                            {{ status | statusContasPagas }}
                         </small>
                     </h1>
                     <br>

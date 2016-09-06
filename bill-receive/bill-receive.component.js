@@ -1,6 +1,6 @@
 window.billReceiveComponent = Vue.extend({
     components: {
-        'menu-component': billPayMenuComponent
+        'receive-menu-component': billReceiveMenuComponent
     },
     template: `
         <div class="container">
@@ -8,13 +8,13 @@ window.billReceiveComponent = Vue.extend({
                 <div class="col-md-12">
                     <h1 class="text-primary">
                         {{ title }}
-                        <!--<br>-->
-                        <!--<small :class="{'text-default': status === false, 'text-success': status === 0, 'text-danger': status > 0}">-->
-                            <!--{{ status | statusLabel }}-->
-                        <!--</small>-->
+                        <br>
+                        <small :class="{'text-default': status === false, 'text-success': status === 0, 'text-danger': status > 0}">
+                            {{ status | statusContasRecebidas }}
+                        </small>
                     </h1>
                     <br>
-                    <!--<menu-component></menu-component>-->
+                    <receive-menu-component></receive-menu-component>
                     <hr>
                     <router-view></router-view>
                 </div>
@@ -25,20 +25,20 @@ window.billReceiveComponent = Vue.extend({
         return {
             title: "Contas a Receber"
         };
+    },
+    computed: {
+        status: function (){
+            var bills = this.$root.$children[0].billsReceive;
+            if(!bills.length) {
+                return false;
+            }
+            var count = 0;
+            for (var i in bills) {
+                if (bills[i].done == 0) {
+                    count++;
+                }
+            }
+            return count;
+        }
     }
-    // computed: {
-    //     status: function (){
-    //         var bills = this.$root.$children[0].billsPay;
-    //         if(!bills.length) {
-    //             return false;
-    //         }
-    //         var count = 0;
-    //         for (var i in bills) {
-    //             if (bills[i].done == 0) {
-    //                 count++;
-    //             }
-    //         }
-    //         return count;
-    //     }
-    // }
 });
