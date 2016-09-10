@@ -14,6 +14,8 @@ window.billPayComponent = Vue.extend({
                         </small>
                     </h1>
                     <br>
+                    <h3>{{ total | currency 'R$ ' }}</h3>
+                    <br>
                     <pay-menu-component></pay-menu-component>
                     <hr>
                     <router-view></router-view>
@@ -23,14 +25,19 @@ window.billPayComponent = Vue.extend({
     `,
     data: function(){
         return {
-            title: "Contas a Pagar"
+            title: "Contas a Pagar",
+            status: false,
+            total: 0
         };
     },
-    computed: {
-        status: function (){
-            var bills = this.$root.$children[0].billsPay;
+    created: function () {
+        this.updateStatus();
+        this.updateTotal();
+    },
+    methods: {
+        calculateStatus: function (bills) {
             if(!bills.length) {
-                return false;
+                this.status = false;
             }
             var count = 0;
             for (var i in bills) {
@@ -38,7 +45,25 @@ window.billPayComponent = Vue.extend({
                     count++;
                 }
             }
-            return count;
+            this.status = count;
+        },
+        updateStatus: function () {
+            var self = this;
+            BillPay.query().then(function (response) {
+                self.calculateStatus(response.data);
+            });
+        },
+        updateTotal: function () {
+            var self = this;
+            BillPay.total().then(function (response) {
+                self.total = response.data.total;
+            });
+        }
+    },
+    events: {
+        'change-info': function () {
+            this.updateStatus();
+            this.updateTotal();
         }
     }
 });

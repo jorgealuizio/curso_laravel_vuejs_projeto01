@@ -21,7 +21,7 @@ window.billReceiveListComponent = Vue.extend({
                     {{ o.done | doneLabelRecebidas }}
                 </td>
                 <td>
-                    <a v-link="{ name: 'bill-receive.update', params: { index: index } }" class="btn btn-primary btn-xs">Editar</a>
+                    <a v-link="{ name: 'bill-receive.update', params: { id: o.id } }" class="btn btn-primary btn-xs">Editar</a>
                     <a href="#" class="btn btn-danger btn-xs" @click.prevent="destroyBill(o)">Excluir</a>
                 </td>
             </tr>
@@ -30,13 +30,23 @@ window.billReceiveListComponent = Vue.extend({
     `,
     data: function () {
         return {
-            bills: this.$root.$children[0].billsReceive
+            bills: []
         };
+    },
+    created: function () {
+        var self = this;
+        BillReceive.query().then(function (response) {
+            self.bills = response.data;
+        });
     },
     methods: {
         destroyBill: function (bill) {
             if (confirm("Deseja realmente excluir a conta?")) {
-                this.$root.$children[0].billsReceive.$remove(bill);
+                var self = this;
+                BillReceive.delete({id: bill.id}).then(function (response) {
+                    self.bills.$remove(bill);
+                    self.$dispatch('change-info');
+                });
             }
         }
     }

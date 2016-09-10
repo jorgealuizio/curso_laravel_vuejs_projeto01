@@ -13,25 +13,20 @@ window.dashboardComponent = Vue.extend({
             </div>
         </div>
     `,
-    computed: {
-        saldo: function (){
-            var billsReceive = this.$root.$children[0].billsReceive,
-                billsPay = this.$root.$children[0].billsPay;
-
-            var toalReceive = 0,
-                totalPay = 0;
-
-            for (var i in billsReceive) {
-                if (billsReceive[i].done == 0) {
-                    toalReceive += billsReceive[i].value;
-                }
-            }
-            for (var j in billsPay) {
-                if (billsPay[j].done == 0) {
-                    totalPay += billsPay[j].value;
-                }
-            }
-            return (toalReceive - totalPay);
+    data: function(){
+        return {
+            saldo: 0
+        };
+    },
+    created: function () {
+        this.updateSaldo();
+    },
+    methods: {
+        updateSaldo: function () {
+            var self = this;
+            BillSaldo.query().then(function (response) {
+                self.saldo = response.data.saldo;
+            });
         }
     }
 });

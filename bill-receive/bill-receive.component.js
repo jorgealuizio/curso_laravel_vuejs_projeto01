@@ -14,6 +14,8 @@ window.billReceiveComponent = Vue.extend({
                         </small>
                     </h1>
                     <br>
+                    <h3>{{ total | currency 'R$ ' }}</h3>
+                    <br>
                     <receive-menu-component></receive-menu-component>
                     <hr>
                     <router-view></router-view>
@@ -23,14 +25,19 @@ window.billReceiveComponent = Vue.extend({
     `,
     data: function(){
         return {
-            title: "Contas a Receber"
+            title: "Contas a Receber",
+            status: false,
+            total: 0
         };
     },
-    computed: {
-        status: function (){
-            var bills = this.$root.$children[0].billsReceive;
+    created: function () {
+        this.updateStatus();
+        this.updateTotal();
+    },
+    methods: {
+        calculateStatus: function (bills) {
             if(!bills.length) {
-                return false;
+                this.status = false;
             }
             var count = 0;
             for (var i in bills) {
@@ -38,7 +45,25 @@ window.billReceiveComponent = Vue.extend({
                     count++;
                 }
             }
-            return count;
+            this.status = count;
+        },
+        updateStatus: function () {
+            var self = this;
+            BillReceive.query().then(function (response) {
+                self.calculateStatus(response.data);
+            });
+        },
+        updateTotal: function () {
+            var self = this;
+            BillReceive.total().then(function (response) {
+                self.total = response.data.total;
+            });
+        }
+    },
+    events: {
+        'change-info': function () {
+            this.updateStatus();
+            this.updateTotal();
         }
     }
 });

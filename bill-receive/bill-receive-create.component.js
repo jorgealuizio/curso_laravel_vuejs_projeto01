@@ -36,7 +36,7 @@ window.billReceiveCreateComponent = Vue.extend({
                 'Sites',
                 'Sistemas',
                 'Consultoria',
-                'Suporte Técnico',
+                'Suporte Tecnico',
                 'Treinamentos'
             ],
             formType: 'insert',
@@ -51,26 +51,29 @@ window.billReceiveCreateComponent = Vue.extend({
     created: function () {
         if(this.$route.name == 'bill-receive.update'){
             this.formType = 'update';
-            this.getBill(this.$route.params.index);
+            this.getBill(this.$route.params.id);
         }
     },
     methods: {
         submit: function () {
+            var self = this;
             if (this.formType == 'insert') {
-                this.$root.$children[0].billsReceive.push(this.bill);
+                BillReceive.save({}, this.bill).then(function (response) {
+                    self.$dispatch('change-info');
+                    self.$router.go({name: 'bill-receive.list'});
+                });
+            } else {
+                BillReceive.update({id: this.bill.id}, this.bill).then(function (response) {
+                    self.$dispatch('change-info');
+                    self.$router.go({name: 'bill-receive.list'});
+                });
             }
-            // Limpar o formulário
-            this.bill = {
-                date_due: '',
-                name: '',
-                value: 0,
-                done: 0
-            };
-            this.$router.go({name: 'bill-receive.list'});
         },
-        getBill: function (index) {
-            var bills = this.$root.$children[0].billsReceive;
-            this.bill = bills[index];
+        getBill: function (id) {
+            var self = this;
+            BillReceive.get({id: id}).then(function (response) {
+                self.bill = response.data;
+            });
         }
     }
 });
