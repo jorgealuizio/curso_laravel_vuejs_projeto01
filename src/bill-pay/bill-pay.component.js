@@ -1,6 +1,6 @@
-window.billReceiveComponent = Vue.extend({
+window.billPayComponent = Vue.extend({
     components: {
-        'receive-menu-component': billReceiveMenuComponent
+        'pay-menu-component': billPayMenuComponent
     },
     template: `
         <div class="container">
@@ -10,58 +10,56 @@ window.billReceiveComponent = Vue.extend({
                         {{ title }}
                         <br>
                         <small :class="{'text-default': status === false, 'text-success': status === 0, 'text-danger': status > 0}">
-                            {{ status | statusContasRecebidas }}
+                            {{ status | statusContasPagas }}
                         </small>
                     </h1>
                     <br>
-                    <h3>{{ total | currency 'R$ ' }}</h3>
+                    <h3>{{ total | numberFormat }}</h3>
                     <br>
-                    <receive-menu-component></receive-menu-component>
+                    <pay-menu-component></pay-menu-component>
                     <hr>
                     <router-view></router-view>
                 </div>
             </div>
         </div>
     `,
-    data: function(){
+    data(){
         return {
-            title: "Contas a Receber",
+            title: "Contas a Pagar",
             status: false,
             total: 0
         };
     },
-    created: function () {
+    created() {
         this.updateStatus();
         this.updateTotal();
     },
     methods: {
-        calculateStatus: function (bills) {
+        calculateStatus(bills) {
             if(!bills.length) {
                 this.status = false;
             }
-            var count = 0;
-            for (var i in bills) {
+            let count = 0;
+            for (let i in bills) {
                 if (bills[i].done == 0) {
                     count++;
                 }
             }
             this.status = count;
         },
-        updateStatus: function () {
-            var self = this;
-            BillReceive.query().then(function (response) {
-                self.calculateStatus(response.data);
+        updateStatus() {
+            BillPay.query().then((response) => {
+                this.calculateStatus(response.data);
             });
         },
-        updateTotal: function () {
-            var self = this;
-            BillReceive.total().then(function (response) {
-                self.total = response.data.total;
+        updateTotal() {
+            BillPay.total().then((response) => {
+                this.total = response.data.total;
             });
         }
     },
     events: {
-        'change-info': function () {
+        'change-info'() {
             this.updateStatus();
             this.updateTotal();
         }

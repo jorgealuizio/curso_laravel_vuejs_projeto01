@@ -14,9 +14,9 @@ window.billPayListComponent = Vue.extend({
             <tbody>
             <tr v-for="(index, o) in bills">
                 <td>{{ index + 1 }}</td>
-                <td>{{ o.date_due }}</td>
+                <td>{{ o.date_due | dateFormat }}</td>
                 <td>{{ o.name }}</td>
-                <td>{{ o.value | currency 'R$ ' 2 }}</td>
+                <td>{{ o.value | numberFormat }}</td>
                 <td style="font-weight: bold" :class="{'text-success': o.done==1, 'text-danger': o.done==0}">
                     {{ o.done | doneLabelPagas }}
                 </td>
@@ -28,23 +28,21 @@ window.billPayListComponent = Vue.extend({
             </tbody>
         </table>
     `,
-    data: function () {
+    data() {
         return {
             bills: []
         };
     },
-    created: function () {
-        var self = this;
-        BillPay.query().then(function (response) {
-            self.bills = response.data;
+    created() {
+        BillPay.query().then((response) => {
+            this.bills = response.data;
         });
     },
     methods: {
-        destroyBill: function (bill) {
+        destroyBill(bill) {
             if (confirm("Deseja realmente excluir a conta?")) {
-                var self = this;
-                BillPay.delete({id: bill.id}).then(function (response) {
-                    self.bills.$remove(bill);
+                BillPay.delete({id: bill.id}).then((response) => {
+                    this.bills.$remove(bill);
                     self.$dispatch('change-info');
                 });
             }

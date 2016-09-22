@@ -8,24 +8,23 @@ window.dashboardComponent = Vue.extend({
                 <h2 class="text-primary" align="center">Saldo total atual entre Contas à Receber e Contas à Pagar:</h2>
                 <br>
                 <h2 align="center" :class="{'text-success': saldo >= 0, 'text-danger': saldo < 0}">
-                    {{ saldo | currency 'R$ ' 2 }}
+                    {{ saldo | numberFormat }}
                 </h2>
             </div>
         </div>
     `,
-    data: function(){
+    data(){
         return {
             saldo: 0
         };
     },
-    created: function () {
+    created() {
         this.updateSaldo();
     },
     methods: {
-        updateSaldo: function () {
-            var self = this;
-            BillSaldo.query().then(function (response) {
-                self.saldo = response.data.saldo;
+        updateSaldo() {
+            BillSaldo.query().then((response) => {
+                this.saldo = response.data.saldo;
             });
         }
     }
