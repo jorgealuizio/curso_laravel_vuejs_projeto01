@@ -14,7 +14,7 @@ window.billPayComponent = Vue.extend({
                         </small>
                     </h1>
                     <br>
-                    <h3>{{ total | numberFormat }}</h3>
+                    <h3>{{ total | numberFormat 'pt-BR' 'BRL' }}</h3>
                     <br>
                     <pay-menu-component></pay-menu-component>
                     <hr>

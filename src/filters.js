@@ -23,17 +23,17 @@ Vue.filter('statusContasRecebidas', (value) => {
 });
 
 Vue.filter('numberFormat', {
-    read(value){
+    read(value, lang = 'pt-BR', moeda = 'BRL'){
         let number = 0;
         if(value && typeof value !== undefined){
             let numberRegex = value.toString().match(/\d+(\.{1}\d{1,2}){0,1}/g);
             number = numberRegex ? numberRegex[0] : numberRegex;
         }
-        return new Intl.NumberFormat('pt-BR', {
+        return new Intl.NumberFormat(lang, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
             style: 'currency',
-            currency: 'BRL'
+            currency: moeda
         }).format(number);
     },
     write(value){
@@ -48,7 +48,7 @@ Vue.filter('numberFormat', {
 });
 
 Vue.filter('dateFormat', {
-    read(value){
+    read(value, lang = 'pt-BR'){
         if(value && typeof value !== undefined){
             if(!(value instanceof Date)){
                 let dateRegex = value.match(/\d{4}\-\d{2}\-\d{2}/g);
@@ -59,7 +59,7 @@ Vue.filter('dateFormat', {
                     return value;
                 }
             }
-            return new Intl.DateTimeFormat('pt-BR').format(value).split(' ')[0];
+            return new Intl.DateTimeFormat(lang).format(value).split(' ')[0];
         }
         return value;
     },
@@ -69,8 +69,23 @@ Vue.filter('dateFormat', {
             let dateString = dateRegex[0];
             let date = new Date(dateString.split('/').reverse().join('-')+"T03:00:00");
             if(!isNaN(date.getTime())){
-                return date;
+                return date.toLocaleDateString().split('/').reverse().join('-');
             }
+        }
+        return value;
+    }
+});
+
+Vue.filter('textCaseFormat', {
+    read(value){
+        if(value && typeof value !== undefined){
+            return value.toUpperCase();
+        }
+        return value;
+    },
+    write(value){
+        if(!isNaN(value)){
+            return value.toLowerCase();
         }
         return value;
     }

@@ -14,9 +14,9 @@ window.billReceiveListComponent = Vue.extend({
             <tbody>
             <tr v-for="(index, o) in bills">
                 <td>{{ index + 1 }}</td>
-                <td>{{ o.date_due | dateFormat }}</td>
-                <td>{{ o.name }}</td>
-                <td>{{ o.value | numberFormat }}</td>
+                <td>{{ o.date_due | dateFormat 'pt-BR' }}</td>
+                <td>{{ o.name | textCaseFormat }}</td>
+                <td>{{ o.value | numberFormat 'pt-BR' 'BRL' }}</td>
                 <td style="font-weight: bold" :class="{'text-success': o.done==1, 'text-danger': o.done==0}">
                     {{ o.done | doneLabelRecebidas }}
                 </td>

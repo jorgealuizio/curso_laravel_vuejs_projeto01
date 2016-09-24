@@ -15,17 +15,17 @@ window.billPayCreateComponent = Vue.extend({
         <form name="form" @submit.prevent="submit">
             <div class="form-group">
                 <label>Vencimento:</label>
-                <input type="text" class="form-control" v-model="bill.date_due | dateFormat"/>
+                <input type="text" class="form-control" v-model="bill.date_due | dateFormat 'pt-BR'"/>
             </div>
             <div class="form-group">
                 <label>Nome:</label>
                 <select class="form-control" v-model="bill.name">
-                    <option v-for="obj in names" :value="obj">{{ obj }}</option>
+                    <option v-for="obj in names" :value="obj">{{ obj | textCaseFormat }}</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Valor:</label>
-                <input type="text" class="form-control" v-model="bill.value | numberFormat"/>
+                <input type="text" class="form-control" v-model="bill.value | numberFormat 'pt-BR' 'BRL'"/>
             </div>
             <legend>Conta Paga?</legend>
             <label class="radio-inline">
@@ -44,12 +44,7 @@ window.billPayCreateComponent = Vue.extend({
         return {
             names: namesPay,
             formType: 'insert',
-            bill: {
-                date_due: '',
-                name: '',
-                value: 0,
-                done: 0
-            }
+            bill: new ClassBill()
         };
     },
     created() {
@@ -60,7 +55,7 @@ window.billPayCreateComponent = Vue.extend({
     },
     methods: {
         submit() {
-            let data = Vue.util.extend(this.bill, {date_due: this.getDateDue(this.bill.date_due)});
+            let data = this.bill.toJSON();
             if (this.formType == 'insert') {
                 BillPay.save({}, data).then((response) => {
                     this.$dispatch('change-info');
@@ -75,15 +70,16 @@ window.billPayCreateComponent = Vue.extend({
         },
         getBill(id) {
             BillPay.get({id: id}).then((response) => {
-                this.bill = response.data;
+                this.bill = new ClassBill(response.data);
             });
         },
         getDateDue(date_due) {
             let dateDueObject = date_due;
             if(!(date_due instanceof Date)){
-                dateDueObject = new Date(dateString.split('/').reverse().join('-')+"T03:00:00");
+                dateDueObject = new Date(dateDueObject.split('/').reverse().join('-')+"T03:00:00");
             }
-            return dateDueObject.toISOString().split('T')[0];
+            //return dateDueObject.toISOString().split('T')[0];
+            return dateDueObject.substring(0,10);
         }
     }
 });

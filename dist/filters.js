@@ -32,16 +32,19 @@ Vue.filter('statusContasRecebidas', function (value) {
 
 Vue.filter('numberFormat', {
     read: function read(value) {
+        var lang = arguments.length <= 1 || arguments[1] === undefined ? 'pt-BR' : arguments[1];
+        var moeda = arguments.length <= 2 || arguments[2] === undefined ? 'BRL' : arguments[2];
+
         var number = 0;
         if (value && (typeof value === "undefined" ? "undefined" : _typeof(value)) !== undefined) {
             var numberRegex = value.toString().match(/\d+(\.{1}\d{1,2}){0,1}/g);
             number = numberRegex ? numberRegex[0] : numberRegex;
         }
-        return new Intl.NumberFormat('pt-BR', {
+        return new Intl.NumberFormat(lang, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
             style: 'currency',
-            currency: 'BRL'
+            currency: moeda
         }).format(number);
     },
     write: function write(value) {
@@ -56,6 +59,8 @@ Vue.filter('numberFormat', {
 
 Vue.filter('dateFormat', {
     read: function read(value) {
+        var lang = arguments.length <= 1 || arguments[1] === undefined ? 'pt-BR' : arguments[1];
+
         if (value && (typeof value === "undefined" ? "undefined" : _typeof(value)) !== undefined) {
             if (!(value instanceof Date)) {
                 var dateRegex = value.match(/\d{4}\-\d{2}\-\d{2}/g);
@@ -66,7 +71,7 @@ Vue.filter('dateFormat', {
                     return value;
                 }
             }
-            return new Intl.DateTimeFormat('pt-BR').format(value).split(' ')[0];
+            return new Intl.DateTimeFormat(lang).format(value).split(' ')[0];
         }
         return value;
     },
@@ -76,8 +81,23 @@ Vue.filter('dateFormat', {
             var dateString = dateRegex[0];
             var date = new Date(dateString.split('/').reverse().join('-') + "T03:00:00");
             if (!isNaN(date.getTime())) {
-                return date;
+                return date.toLocaleDateString().split('/').reverse().join('-');
             }
+        }
+        return value;
+    }
+});
+
+Vue.filter('textCaseFormat', {
+    read: function read(value) {
+        if (value && (typeof value === "undefined" ? "undefined" : _typeof(value)) !== undefined) {
+            return value.toUpperCase();
+        }
+        return value;
+    },
+    write: function write(value) {
+        if (!isNaN(value)) {
+            return value.toLowerCase();
         }
         return value;
     }
